@@ -6,7 +6,7 @@ var options = {
   useNewUrlParser: true,
 };
 
-mongoose.connect("", options, function (err) {
+mongoose.connect("mongodb+srv://juju:juju0508@cluster0.51ryg.mongodb.net/golfApp?retryWrites=true&w=majority", options, function (err) {
   console.log(err);
 });
 
