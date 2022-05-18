@@ -10,7 +10,7 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-router.post('/signup', async function(req, res, next) {
+router.post('/register', async function(req, res, next) {
 
   var result = false
   var error = []
@@ -25,6 +25,9 @@ router.post('/signup', async function(req, res, next) {
 
   if(req.body.emailFromFront == ''
   || req.body.passwordFromFront == ''
+  || req.body.userNameFromFront == ''
+  || req.body.prenomFromFront == ''
+  || req.body.birthDateFromFront == ''
   ){
     error.push('champs vides')
   }
@@ -37,6 +40,9 @@ router.post('/signup', async function(req, res, next) {
       mail: req.body.emailFromFront,
       password: hash,
       token: uid2(32),
+      userName: req.body.userNameFromFront,
+      userPrenom: req.body.prenomFromFront,  
+      birthDate: req.body.birthDateFromFront,
     })
 
     var user = await newUser.save()
