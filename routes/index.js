@@ -57,9 +57,12 @@ router.post("/golfAdd", async function (req, res, next) {
   }
 });
 
-router.post("/signup", async function (req, res, next) {
+router.post("/register", async function (req, res, next) {
+
   var result = false;
+  var user = null;
   var error = [];
+  
 
   const data = await userModel.findOne({
     mail: req.body.emailFromFront,
@@ -79,7 +82,10 @@ router.post("/signup", async function (req, res, next) {
     var newUser = new userModel({
       mail: req.body.emailFromFront,
       password: hash,
-      token: uid2(32),
+      token: uid2(32),     
+      userName: req.body.userNameFromFront,
+      userPrenom: req.body.prenomFromFront,      
+      birthDate: req.body.birthDateFromFront,
     });
 
     var user = await newUser.save();
