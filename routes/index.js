@@ -16,7 +16,7 @@ router.post('/signup', async function(req, res, next) {
   var error = []
 
   const data = await userModel.findOne({
-    email: req.body.emailFromFront
+    mail: req.body.emailFromFront
   })
 
   if(data != null){
@@ -39,20 +39,51 @@ router.post('/signup', async function(req, res, next) {
       token: uid2(32),
     })
 
-    saveUser = await newUser.save()
+    var user = await newUser.save()
 
-    if(saveUser){
+    if(user){
       result = true
       
     }
-  }
-  
+  }  
 
-  res.json({result, error});
+  res.json({result, error, user});
 });
 
-router.post('/signin', function(req, res, next) {
 
+router.post('/login', async function(req, res, next) {
+  
+
+    var result = false
+    var user = null
+    var error = []
+    var token = null
+    
+    if(req.body.emailFromFront == ''
+    || req.body.passwordFromFront == ''
+    ){
+      error.push('champs vides')
+    }
+  
+    if(error.length == 0){
+      user = await userModel.findOne({
+        email: req.body.emailFromFront,
+      })
+    
+      
+      if(user){
+        if(bcrypt.compareSync(req.body.passwordFromFront, user.password)){
+          result = true
+          token = user.token
+        } else {
+          result = false
+          error.push('mot de passe incorrect')
+        }
+        
+      } else {
+        error.push('email incorrect')
+      }
+    }
 
 
   res.json({result, error});
