@@ -75,12 +75,23 @@ router.post("/register", async function (req, res, next) {
     error.push("utilisateur déjà présent");
   }
 
-  if (req.body.emailFromFront == "" || req.body.passwordFromFront == "") {
-    error.push("champs vides");
+  if (
+    req.body.emailFromFront == "" ||
+    req.body.passwordFromFront == "" ||
+    req.body.userNameFromFront == "" ||
+    req.body.prenomFromFront == "" ||
+    req.body.birthDateFromFront == ""
+  ) {
+    error.push("Des champs sont vides");
   }
 
   if (error.length == 0) {
     var hash = bcrypt.hashSync(req.body.passwordFromFront, 10);
+
+    var date = new Date();
+    date.setDate(req.body.birthDateFromFront.slice(0, 2));
+    date.setMonth(req.body.birthDateFromFront.slice(2, 4));
+    date.setFullYear(req.body.birthDateFromFront.slice(4, 8));
 
     var newUser = new userModel({
       mail: req.body.emailFromFront,
@@ -88,7 +99,7 @@ router.post("/register", async function (req, res, next) {
       token: uid2(32),
       userName: req.body.userNameFromFront,
       userPrenom: req.body.prenomFromFront,
-      birthDate: req.body.birthDateFromFront,
+      birthDate: date,
     });
 
     var user = await newUser.save();
