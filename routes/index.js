@@ -9,7 +9,6 @@ var GolfModel = require("../models/golf");
 
 
 
-
 /* GET home page. */
 router.get("/", function (req, res, next) {
   res.render("index", { title: "Express" });
@@ -76,12 +75,26 @@ router.post("/register", async function (req, res, next) {
     error.push("utilisateur déjà présent");
   }
 
-  if (    req.body.emailFromFront == "" 
-      ||  req.body.passwordFromFront == ""
+  if ( req.body.passwordFromFront == ""
       ||  req.body.userNameFromFront == ""
       ||  req.body.prenomFromFront == ""
       ||  req.body.birthDateFromFront == "") {
+           
     error.push("Des champs sont vides");
+  }
+
+  
+  if (!req.body.emailFromFront.includes('@') || !req.body.emailFromFront.includes('.')) {
+    error.push("Email Incorrect")
+  }
+
+  
+  if (req.body.passwordFromFront.length < 8) {
+    error.push("Le Mot de Passe doit contenir au moins 8 caractères ")
+  }
+
+  if (req.body.birthDateFromFront.length < 8) {
+    error.push("Date de naissance incorrect")
   }
 
 
@@ -90,17 +103,20 @@ router.post("/register", async function (req, res, next) {
 
     var date = new Date();
 
-    var jour = date.setDate(req.body.birthDateFromFront.slice(0,2));
-    var mois = date.setMonth(req.body.birthDateFromFront.slice(2,4));
-    var annee = date.setFullYear(req.body.birthDateFromFront.slice(4,8));
+    date.setDate(req.body.birthDateFromFront.slice(0,2));
+    var mois = req.body.birthDateFromFront.slice(2,4)-1
+    date.setMonth(mois)
+    date.setFullYear(req.body.birthDateFromFront.slice(4,8));
 
     var newUser = new userModel({
+
       mail: req.body.emailFromFront,
       password: hash,
       token: uid2(32),     
       userName: req.body.userNameFromFront,
       userPrenom: req.body.prenomFromFront,      
       birthDate: date,
+      
     });
 
     var user = await newUser.save();
