@@ -13,7 +13,7 @@ router.get("/", function (req, res, next) {
 
 router.get("/askgolf", async function (req, res, next) {
   var result = await GolfModel.find();
-  console.log(result);
+  console.log(result)
   res.json({ result });
 });
 
