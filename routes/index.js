@@ -4,6 +4,7 @@ var bcrypt = require('bcrypt');
 var uid2 = require('uid2');
 
 var userModel = require('../models/user')
+var golfModel = require('../models/golf')
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -56,6 +57,28 @@ router.post('/signin', function(req, res, next) {
 
 
   res.json({result, error});
+});
+
+
+router.post('/addGolf', async function(req, res, next) {
+
+  var newGolf = new golfModel({      
+    golfName: req.body.name,
+    golfCity: req.body.city,
+    golfAddress: req.body.address,
+    golfPostCode: req.body.postcode,
+    nbreTrou: req.body.nbreTrou
+  })
+
+  saveGolf = await newGolf.save()
+
+  var result = false
+
+  if (saveGolf){
+    result = true
+  }
+
+  res.json({result});
 });
 
 module.exports = router;
