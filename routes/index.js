@@ -16,7 +16,7 @@ router.get("/", function (req, res, next) {
 
 router.get("/askgolf", async function (req, res, next) {
   var result = await GolfModel.find();
-  console.log(result)
+  console.log(result);
   res.json({ result });
 });
 
@@ -26,9 +26,14 @@ router.post("/golfAdd", async function (req, res, next) {
   for (var i = 0; i < 11; i++) {
     golf.push({
       golfName: `golf ${i}`,
-      golfCity: "Paris",
-      golfAddress: `5${i} boulevard Peirrere`,
-      golfPostCode: "75017",
+      golfAddress: {
+        golfCity: "Paris",
+        golfPostCode: "75017",
+        golfAddressName: `5${i} boulevard Peirrere`,
+        golfLatitude: parseFloat(48.875 + { i } + 2),
+        golLongitude: parseFloat(2.33 + { i } + 5),
+      },
+
       parcours: [
         {
           parcoursName: "parcour 1",
@@ -61,11 +66,9 @@ router.post("/golfAdd", async function (req, res, next) {
 });
 
 router.post("/register", async function (req, res, next) {
-
   var result = false;
   var user = null;
   var error = [];
-  
 
   const data = await userModel.findOne({
     mail: req.body.emailFromFront,
@@ -112,9 +115,9 @@ router.post("/register", async function (req, res, next) {
 
       mail: req.body.emailFromFront,
       password: hash,
-      token: uid2(32),     
+      token: uid2(32),
       userName: req.body.userNameFromFront,
-      userPrenom: req.body.prenomFromFront,      
+      userPrenom: req.body.prenomFromFront,
       birthDate: date,
       
     });
