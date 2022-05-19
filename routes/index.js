@@ -86,14 +86,14 @@ router.post("/register", async function (req, res, next) {
     error.push("Des champs sont vides");
   }
 
-  
-  if (!req.body.emailFromFront.includes('@') || !req.body.emailFromFront.includes('.')) {
+  const regexMail = new RegExp(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+  if (!req.body.emailFromFront.test(regexMail)) {
     error.push("Email Incorrect")
   }
 
-  
-  if (req.body.passwordFromFront.length < 8) {
-    error.push("Le Mot de Passe doit contenir au moins 8 caractères ")
+  const regexPassword = new RegExp(/^(?=.{8,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*$/)
+  if (req.body.passwordFromFront.test(regexPassword)) {
+    error.push("Mot de Passe Incorrect doit contenir au moins 8 charactères, 1 majuscule, 1 minuscule et 1 chiffre")
   }
 
   if (req.body.birthDateFromFront.length < 8) {
