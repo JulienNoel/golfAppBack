@@ -3,8 +3,12 @@ var router = express.Router();
 var bcrypt = require("bcrypt");
 var uid2 = require("uid2");
 
+
 var userModel = require("../models/user");
 var GolfModel = require("../models/golf");
+
+
+
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
@@ -80,13 +84,15 @@ router.post("/register", async function (req, res, next) {
     error.push("Des champs sont vides");
   }
 
+
   if (error.length == 0) {
     var hash = bcrypt.hashSync(req.body.passwordFromFront, 10);
 
     var date = new Date();
-    date.setDate(req.body.birthDateFromFront.slice(0,2));
-    date.setMonth(req.body.birthDateFromFront.slice(2,4));
-    date.setFullYear(req.body.birthDateFromFront.slice(4,8));
+
+    var jour = date.setDate(req.body.birthDateFromFront.slice(0,2));
+    var mois = date.setMonth(req.body.birthDateFromFront.slice(2,4));
+    var annee = date.setFullYear(req.body.birthDateFromFront.slice(4,8));
 
     var newUser = new userModel({
       mail: req.body.emailFromFront,
