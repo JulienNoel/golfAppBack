@@ -3,11 +3,8 @@ var router = express.Router();
 var bcrypt = require("bcrypt");
 var uid2 = require("uid2");
 
-
 var userModel = require("../models/user");
 var GolfModel = require("../models/golf");
-
-
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
@@ -78,48 +75,57 @@ router.post("/register", async function (req, res, next) {
     error.push("utilisateur déjà présent");
   }
 
-  if ( req.body.passwordFromFront == ""
-      ||  req.body.userNameFromFront == ""
-      ||  req.body.prenomFromFront == ""
-      ||  req.body.birthDateFromFront == "") {
-           
+  if (
+    req.body.passwordFromFront == "" ||
+    req.body.userNameFromFront == "" ||
+    req.body.prenomFromFront == "" ||
+    req.body.birthDateFromFront == ""
+  ) {
     error.push("Des champs sont vides");
   }
+  if (
+    req.body.emailFromFront ||
+    req.body.passwordFromFront ||
+    req.body.birthDateFromFront
+  ) {
+    const regexMail = new RegExp(
+      /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+    if (!req.body.emailFromFront.test(regexMail)) {
+      error.push("Email Incorrect");
+    }
 
-  const regexMail = new RegExp(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
-  if (!req.body.emailFromFront.test(regexMail)) {
-    error.push("Email Incorrect")
+    const regexPassword = new RegExp(
+      /^(?=.{8,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*$/
+    );
+    if (req.body.passwordFromFront.test(regexPassword)) {
+      error.push(
+        "Mot de Passe Incorrect doit contenir au moins 8 charactères, 1 majuscule, 1 minuscule et 1 chiffre"
+      );
+    }
+
+    if (req.body.birthDateFromFront.length < 8) {
+      error.push("Date de naissance incorrect");
+    }
   }
-
-  const regexPassword = new RegExp(/^(?=.{8,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*$/)
-  if (req.body.passwordFromFront.test(regexPassword)) {
-    error.push("Mot de Passe Incorrect doit contenir au moins 8 charactères, 1 majuscule, 1 minuscule et 1 chiffre")
-  }
-
-  if (req.body.birthDateFromFront.length < 8) {
-    error.push("Date de naissance incorrect")
-  }
-
 
   if (error.length == 0) {
     var hash = bcrypt.hashSync(req.body.passwordFromFront, 10);
 
     var date = new Date();
 
-    date.setDate(req.body.birthDateFromFront.slice(0,2));
-    var mois = req.body.birthDateFromFront.slice(2,4)-1
-    date.setMonth(mois)
-    date.setFullYear(req.body.birthDateFromFront.slice(4,8));
+    date.setDate(req.body.birthDateFromFront.slice(0, 2));
+    var mois = req.body.birthDateFromFront.slice(2, 4) - 1;
+    date.setMonth(mois);
+    date.setFullYear(req.body.birthDateFromFront.slice(4, 8));
 
     var newUser = new userModel({
-
       mail: req.body.emailFromFront,
       password: hash,
       token: uid2(32),
       userName: req.body.userNameFromFront,
       userPrenom: req.body.prenomFromFront,
       birthDate: date,
-      
     });
 
     var user = await newUser.save();
