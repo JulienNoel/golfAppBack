@@ -83,26 +83,21 @@ router.post("/register", async function (req, res, next) {
   ) {
     error.push("Des champs sont vides");
   }
-  // if (
-  //   req.body.emailFromFront ||
-  //   req.body.passwordFromFront ||
-  //   req.body.birthDateFromFront
-  // ) {
-  //   const regexMail = new RegExp(
-  //     /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-  //   );
-  //   if (!req.body.emailFromFront.test(regexMail)) {
-  //     error.push("Email Incorrect");
-  //   }
+  
 
-    // const regexPassword = new RegExp(
-    //   /^(?=.{8,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*$/
-    // );
-    // if (req.body.passwordFromFront.test(regexPassword)) {
-    //   error.push(
-    //     "Mot de Passe Incorrect doit contenir au moins 8 charactères, 1 majuscule, 1 minuscule et 1 chiffre"
-    //   );
-    // }
+     var regexMail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
+     
+     if (!regexMail.test(req.body.emailFromFront)) {
+       error.push("Email Incorrect");
+     }
+
+     var regexPassword = /^(?=.{8,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*$/
+    
+     if (!regexPassword.test(req.body.passwordFromFront)) {
+       error.push(
+         "Mot de Passe Incorrect doit contenir au moins 8 charactères, 1 majuscule, 1 minuscule et 1 chiffre"
+       );
+     }
 
     if (req.body.birthDateFromFront.length < 8) {
       error.push("Date de naissance incorrect");
@@ -112,12 +107,6 @@ router.post("/register", async function (req, res, next) {
   if (error.length == 0) {
     var hash = bcrypt.hashSync(req.body.passwordFromFront, 10);
 
-    var date = new Date();
-
-    date.setDate(req.body.birthDateFromFront.slice(0, 2));
-    var mois = req.body.birthDateFromFront.slice(2, 4) - 1;
-    date.setMonth(mois);
-    date.setFullYear(req.body.birthDateFromFront.slice(4, 8));
 
     var newUser = new userModel({
       mail: req.body.emailFromFront,
@@ -125,7 +114,7 @@ router.post("/register", async function (req, res, next) {
       token: uid2(32),
       userName: req.body.userNameFromFront,
       userPrenom: req.body.prenomFromFront,
-      birthDate: date,
+      birthDate: req.body.birthDateFromFront,
     });
 
     var user = await newUser.save();
