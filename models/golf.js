@@ -12,6 +12,10 @@ var parcoursSchema = mongoose.Schema({
 var golfSchema = mongoose.Schema({
   golfName: String,
   golfCity: String,
+  practice: Boolean,
+  restauration: Boolean,
+  dixhuitTrous: Number,
+  neufTrous: Number,
   golfAddress: {
     golfCity: String,
     golfPostCode: String,
