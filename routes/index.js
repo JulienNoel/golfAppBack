@@ -139,9 +139,9 @@ router.post("/login", async function (req, res, next) {
 
   if (error.length == 0) {
     user = await userModel.findOne({
-      email: req.body.emailFromFront,
+      mail: req.body.emailFromFront,
     });
-
+    console.log(user)
     if (user) {
       if (bcrypt.compareSync(req.body.passwordFromFront, user.password)) {
         result = true;
@@ -155,7 +155,7 @@ router.post("/login", async function (req, res, next) {
     }
   }
 
-  res.json({ result, error });
+  res.json({ result, error, user, token });
 });
 
 module.exports = router;
