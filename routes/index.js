@@ -98,12 +98,11 @@ router.post("/register", async function (req, res, next) {
          "Mot de Passe Incorrect doit contenir au moins 8 charactères, 1 majuscule, 1 minuscule et 1 chiffre"
        );
      }
-
-    if (req.body.birthDateFromFront.length < 8) {
+     var regexBirthDate = /^[0-3]?[0-9].[0-3]?[0-9].(?:[0-9]{2})?[0-9]{2}$/
+    if (!regexBirthDate.test(req.body.birthDateFromFront) && (req.body.birthDateFromFront).length < 10) {
       error.push("Date de naissance incorrect");
     }
   
-
   if (error.length == 0) {
     var hash = bcrypt.hashSync(req.body.passwordFromFront, 10);
 
@@ -156,6 +155,13 @@ router.post("/login", async function (req, res, next) {
   }
 
   res.json({ result, error, user, token });
+});
+
+router.post("/saveScore", async function (req, res, next) {
+  
+  
+
+  res.json({ result });
 });
 
 module.exports = router;
