@@ -5,15 +5,49 @@ var uid2 = require("uid2");
 
 var userModel = require("../models/user");
 var GolfModel = require("../models/golf");
+var reservationModel = require("../models/reservation")
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
   res.render("index", { title: "Express" });
 });
 
+router.post("/reservation", async function (req, res, next) {
+
+  var meAndI = await userModel.findOne({
+    token: req.body.token
+  })
+
+  var myId = meAndI.id
+
+  var buddy = await userModel.findOne({
+    mail :req.body.mail
+  })
+
+  var buddyId = buddy.id
+
+  var playerIdArray = []
+
+  playerIdArray.push(myId)
+  playerIdArray.push(buddyId)
+
+
+  var nouvelleReservation = new reservationModel({
+    dateReservation: req.body.date,
+    typeReservation: req.body.type,
+    playerId: playerIdArray,
+    golfId: req.body.golfId,
+    nomParcours: req.body.nomParcours
+  })
+
+  var reservationSaved = await nouvelleReservation.save();
+
+  res.json({ result: reservationSaved });
+
+});
+
 router.get("/askgolf", async function (req, res, next) {
   var result = await GolfModel.find();
-  console.log(result);
   res.json({ result });
 });
 
