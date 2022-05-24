@@ -7,9 +7,7 @@ var userSchema = mongoose.Schema({
     userPrenom: String,
     mail: String,
     password: String,
-    birthDate: String,
-    //gender: String,
-    //carteVerte: String,   
+    birthDate: String,   
     //reservationId: {type: mongoose.Schema.Types.ObjectId, ref: 'reservation'}
     
 })
