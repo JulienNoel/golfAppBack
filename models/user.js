@@ -1,17 +1,18 @@
 var mongoose = require('mongoose')
 
-var userSchema = mongoose.Schema({
+var historiqueSchema = mongoose.Schema({
+    score : Number,
+  });
 
+var userSchema = mongoose.Schema({
     token: String,
     userName: String,
     userPrenom: String,
     mail: String,
     password: String,
-    birthDate: String,
-    //gender: String,
-    //carteVerte: String,   
-    //reservationId: {type: mongoose.Schema.Types.ObjectId, ref: 'reservation'}
-    
+    birthDate: String,  
+    reservationId: [{type : mongoose.Schema.Types.ObjectId, ref: 'reservation'}],
+    reservationId: [historiqueSchema],
 })
 
 var userModel = mongoose.model('users', userSchema)
