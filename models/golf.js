@@ -1,14 +1,18 @@
 var mongoose = require("mongoose");
-
-var parcoursSchema = mongoose.Schema({
-  parcoursName: String,
-  nbreTrou: Number,
-  longueur: String,
-  par: Number,
-  image: String,
-  difficulté: Number,
+var parSchema = mongoose.Schema({
+  distance : Number, 
+  par : Number, 
+  trou: Number,
+  url : String,
 });
 
+
+var parcoursSchema = mongoose.Schema({
+  nomParcours: String,
+  parcoursTrou: [parSchema],
+});
+
+// remarque : j'aurais mis dans l'object goldAddress seulement city, postCode sans golf comme ca on pouvait faire golfAddress.city etc
 var golfSchema = mongoose.Schema({
   golfName: String,
   golfCity: String,
