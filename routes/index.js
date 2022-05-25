@@ -142,8 +142,15 @@ router.post("/golfAdd", async function (req, res, next) {
   }
 
   for (var i = 0; i < 11; i++) {
+    var randomBool1 = Math.random() > 0.5 ? true : false;
+    var randomBool2 = Math.random() > 0.5 ? true : false;
+
     golf.push({
       golfName: `golf ${i}`,
+      practice: randomBool1,
+      restauration: randomBool2,
+      dixhuitTrous: 1,
+      neufTrous: 1,
       golfAddress: {
         golfCity: "Paris",
         golfPostCode: "75017",
@@ -157,6 +164,10 @@ router.post("/golfAdd", async function (req, res, next) {
 
     var newGolf = new GolfModel({
       golfName: golf[i].golfName,
+      practice: golf[i].practice,
+      restauration: golf[i].restauration,
+      dixhuitTrous: golf[i].dixhuitTrous,
+      neufTrous: golf[i].neufTrous,
       golfCity: golf[i].golfCity,
       golfAddress: golf[i].golfAddress,
       golfPostCode: golf[i].golfPostCode,
