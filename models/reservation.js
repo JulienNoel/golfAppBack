@@ -9,6 +9,6 @@ var reservationSchema = mongoose.Schema({
   nomParcours: String,
 });
 
-var reservationModel = mongoose.model("reservation", reservationSchema);
+var reservationModel = mongoose.model("reservations", reservationSchema);
 
 module.exports = reservationModel;
