@@ -87,7 +87,7 @@ router.post("/golfAdd", async function (req, res, next) {
     'https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399491/golf/vineuil-12-sm_v81obm.jpg',
     'https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399539/golf/vineuil-10-sm_yxg9zv.jpg',
     'https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399509/golf/vineuil-1-sm_x7dn5o.jpg']
-    var nomParcours = ["Parcours belle vue", "Parcours des flots bleus", "Parcours des érables", "Parcours beau soleil", "Parcours des amoureux", "Parcours d'Alexis 1er", "Parcours Shaddy", "Parcours de Paris", "Parcours de la bonne fortune", "Parcours du ruisseau", "Parcours de la cascade", "Parcours des rosseaux", "Parcours de la tranquilité", "Parcours des hérables", "Parcours du débutant", "Parcours Wood", "Parcours de la vallée", "Parcours de la dune Bleu", "Parcours de la Capsule", "Parcours hole in one"]
+    var nomParcours = ["Parcours belle vue", "Parcours des flots bleus", "Parcours des érables", "Parcours beau soleil", "Parcours des amoureux", "Parcours d'Alexis 1er", "Parcours Shady", "Parcours de Paris", "Parcours de la bonne fortune", "Parcours du ruisseau", "Parcours de la cascade", "Parcours des rosseaux", "Parcours de la tranquilité", "Parcours des érables", "Parcours du débutant", "Parcours Wood", "Parcours de la vallée", "Parcours de la dune Bleue", "Parcours de la Capsule", "Parcours hole in one"]
 
 
 function randomGolf (index, longueurTrou) {
@@ -108,25 +108,36 @@ function randomGolf (index, longueurTrou) {
 
 
   for (var i = 0; i < 11; i++) {
+    var randomBool1 = Math.random() > 0.5 ? true : false;
+    var randomBool2 = Math.random() > 0.5 ? true : false;
+
     golf.push({
       golfName: `golf ${i}`,
+      practice: randomBool1,
+      restauration: randomBool2,
+      dixhuitTrous: 1,
+      neufTrous: 1,
       golfAddress: {
         golfCity: "Paris",
         golfPostCode: "75017",
-        golfAddressName: `5${i} boulevard Peirrere`,
+        golfAddressName: `5${i} boulevard Pereire`,
         golfLatitude: parseFloat(48.875 +  i/10 ),
         golfLongitude: parseFloat(2.33 +  i/10 ),
       },
 
-      parcours: [randomGolf(0,9),randomGolf(1,18)],
+      parcours: [randomGolf(0,9),randomGolf(1,18)]
     });
 
     var newGolf = new GolfModel({
       golfName: golf[i].golfName,
+      practice: golf[i].practice,
+      restauration: golf[i].restauration,
+      dixhuitTrous: golf[i].dixhuitTrous,
+      neufTrous: golf[i].neufTrous,
       golfCity: golf[i].golfCity,
       golfAddress: golf[i].golfAddress,
       golfPostCode: golf[i].golfPostCode,
-      parcours: golf[i].parcours,
+      parcours: golf[i].parcours
     });
     var golfSaved = await newGolf.save();
   }
