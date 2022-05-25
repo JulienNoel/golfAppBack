@@ -5,15 +5,49 @@ var uid2 = require("uid2");
 
 var userModel = require("../models/user");
 var GolfModel = require("../models/golf");
+var reservationModel = require("../models/reservation")
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
   res.render("index", { title: "Express" });
 });
 
+router.post("/reservation", async function (req, res, next) {
+
+  var meAndI = await userModel.findOne({
+    token: req.body.token
+  })
+
+  var myId = meAndI.id
+
+  var buddy = await userModel.findOne({
+    mail :req.body.mail
+  })
+
+  var buddyId = buddy.id
+
+  var playerIdArray = []
+
+  playerIdArray.push(myId)
+  playerIdArray.push(buddyId)
+
+
+  var nouvelleReservation = new reservationModel({
+    dateReservation: req.body.date,
+    typeReservation: req.body.type,
+    playerId: playerIdArray,
+    golfId: req.body.golfId,
+    nomParcours: req.body.nomParcours
+  })
+
+  var reservationSaved = await nouvelleReservation.save();
+
+  res.json({ result: reservationSaved });
+
+});
+
 router.get("/askgolf", async function (req, res, next) {
   var result = await GolfModel.find();
-  console.log(result);
   res.json({ result });
 });
 
@@ -107,41 +141,29 @@ router.post("/register", async function (req, res, next) {
   ) {
     error.push("Des champs sont vides");
   }
-  // if (
-  //   req.body.emailFromFront ||
-  //   req.body.passwordFromFront ||
-  //   req.body.birthDateFromFront
-  // ) {
-  //   const regexMail = new RegExp(
-  //     /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-  //   );
-  //   if (!req.body.emailFromFront.test(regexMail)) {
-  //     error.push("Email Incorrect");
-  //   }
+  
 
-    // const regexPassword = new RegExp(
-    //   /^(?=.{8,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*$/
-    // );
-    // if (req.body.passwordFromFront.test(regexPassword)) {
-    //   error.push(
-    //     "Mot de Passe Incorrect doit contenir au moins 8 charactères, 1 majuscule, 1 minuscule et 1 chiffre"
-    //   );
-    // }
+     var regexMail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
+     
+     if (!regexMail.test(req.body.emailFromFront)) {
+       error.push("Email Incorrect");
+     }
 
-    if (req.body.birthDateFromFront.length < 8) {
+     var regexPassword = /^(?=.{8,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*$/
+    
+     if (!regexPassword.test(req.body.passwordFromFront)) {
+       error.push(
+         "Mot de Passe Incorrect doit contenir au moins 8 charactères, 1 majuscule, 1 minuscule et 1 chiffre"
+       );
+     }
+     var regexBirthDate = /^[0-3]?[0-9].[0-3]?[0-9].(?:[0-9]{2})?[0-9]{2}$/
+    if (!regexBirthDate.test(req.body.birthDateFromFront) && (req.body.birthDateFromFront).length < 10) {
       error.push("Date de naissance incorrect");
     }
   
-
   if (error.length == 0) {
     var hash = bcrypt.hashSync(req.body.passwordFromFront, 10);
 
-    var date = new Date();
-
-    date.setDate(req.body.birthDateFromFront.slice(0, 2));
-    var mois = req.body.birthDateFromFront.slice(2, 4) - 1;
-    date.setMonth(mois);
-    date.setFullYear(req.body.birthDateFromFront.slice(4, 8));
 
     var newUser = new userModel({
       mail: req.body.emailFromFront,
@@ -149,7 +171,7 @@ router.post("/register", async function (req, res, next) {
       token: uid2(32),
       userName: req.body.userNameFromFront,
       userPrenom: req.body.prenomFromFront,
-      birthDate: date,
+      birthDate: req.body.birthDateFromFront,
     });
 
     var user = await newUser.save();
@@ -174,9 +196,9 @@ router.post("/login", async function (req, res, next) {
 
   if (error.length == 0) {
     user = await userModel.findOne({
-      email: req.body.emailFromFront,
+      mail: req.body.emailFromFront,
     });
-
+    console.log(user)
     if (user) {
       if (bcrypt.compareSync(req.body.passwordFromFront, user.password)) {
         result = true;
@@ -190,7 +212,14 @@ router.post("/login", async function (req, res, next) {
     }
   }
 
-  res.json({ result, error });
+  res.json({ result, error, user, token });
+});
+
+router.post("/saveScore", async function (req, res, next) {
+  
+  
+
+  res.json({ result });
 });
 
 module.exports = router;
