@@ -11,7 +11,7 @@ var userSchema = mongoose.Schema({
     mail: String,
     password: String,
     birthDate: String,  
-    reservationId: [{type : mongoose.Schema.Types.ObjectId, ref: 'reservation'}],
+    reservationId: [{type : mongoose.Schema.Types.ObjectId, ref: 'reservations'}],
     //historiqueId: [historiqueSchema],
 })
 

@@ -212,7 +212,7 @@ router.post("/login", async function (req, res, next) {
     user = await userModel.findOne({
       mail: req.body.emailFromFront,
     });
-    console.log(user);
+    
     if (user) {
       if (bcrypt.compareSync(req.body.passwordFromFront, user.password)) {
         result = true;
