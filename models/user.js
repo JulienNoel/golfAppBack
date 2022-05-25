@@ -12,7 +12,7 @@ var userSchema = mongoose.Schema({
     password: String,
     birthDate: String,  
     reservationId: [{type : mongoose.Schema.Types.ObjectId, ref: 'reservation'}],
-    historiqueId: [historiqueSchema],
+    //historiqueId: [historiqueSchema],
 })
 
 var userModel = mongoose.model('users', userSchema)
