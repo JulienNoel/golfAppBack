@@ -83,32 +83,25 @@ router.post("/golfAdd", async function (req, res, next) {
     389, 284, 142, 297, 357, 160, 319, 472, 461, 319, 153, 397, 370, 320, 328,
     379, 169, 360,
   ];
-  
-
-
-  function randomGolf(index, longueurTrou) {
-    var tableauScore = []
-    var parcours1 = { nomParcours: nomParcours[index] }
-    var tableauImage = [
-      'https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399509/golf/vineuil-1-sm_x7dn5o.jpg',
-      'https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399515/golf/vineuil-2-sm_wr4gxs.jpg',
-      'https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399518/golf/vineuil-3-sm_oghwtx.jpg',
-      'https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399521/golf/vineuil-4-sm_gfymyg.jpg',
-      'https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399524/golf/vineuil-5-sm_lchlaz.jpg',
-      'https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399530/golf/vineuil-6-sm_pxw000.jpg',
-      'https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399527/golf/vineuil-7-sm_z4fsly.jpg',
-      'https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399533/golf/vineuil-8-sm_j4seyc.jpg',
-      'https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399536/golf/vineuil-9-sm_eniu6e.jpg',
-      'https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399539/golf/vineuil-10-sm_yxg9zv.jpg',
-      'https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399542/golf/vineuil-11-sm_fqpopc.jpg',
-      'https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399491/golf/vineuil-12-sm_v81obm.jpg',
-      'https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399494/golf/vineuil-13-sm_cnd9z5.jpg',
-      'https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399497/golf/vineuil-14-sm_xm0ait.jpg',
-      'https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399500/golf/vineuil-15-sm_tjen44.jpg',
-      'https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399503/golf/vineuil-16-sm.jpg',
-      'https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399506/golf/vineuil-17-sm.jpg',
-      'https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399512/golf/vineuil-18-sm.jpg',
-      ]
+  var tableauImage = [
+    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399533/golf/vineuil-8-sm_j4seyc.jpg",
+    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399527/golf/vineuil-7-sm_z4fsly.jpg",
+    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399530/golf/vineuil-6-sm_pxw000.jpg",
+    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399524/golf/vineuil-5-sm_lchlaz.jpg",
+    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399521/golf/vineuil-4-sm_gfymyg.jpg",
+    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399518/golf/vineuil-3-sm_oghwtx.jpg",
+    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399515/golf/vineuil-2-sm_wr4gxs.jpg",
+    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399512/golf/vineuil-18-sm.jpg",
+    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399506/golf/vineuil-17-sm.jpg",
+    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399503/golf/vineuil-16-sm.jpg",
+    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399500/golf/vineuil-15-sm_tjen44.jpg",
+    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399497/golf/vineuil-14-sm_xm0ait.jpg",
+    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399494/golf/vineuil-13-sm_cnd9z5.jpg",
+    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399542/golf/vineuil-11-sm_fqpopc.jpg",
+    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399491/golf/vineuil-12-sm_v81obm.jpg",
+    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399539/golf/vineuil-10-sm_yxg9zv.jpg",
+    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399509/golf/vineuil-1-sm_x7dn5o.jpg",
+  ];
   var nomParcours = [
     "Parcours belle vue",
     "Parcours des flots bleus",
@@ -140,14 +133,13 @@ router.post("/golfAdd", async function (req, res, next) {
       var parcoursTrou = {};
       parcoursTrou.trou = i;
       parcoursTrou.par = par[i - 1];
-      parcoursTrou.url = tableauImage[i - 1]
+      parcoursTrou.url = tableauImage[i - 1];
       parcoursTrou.distance = distance[i - 1];
-      tableauScore.push(parcoursTrou)
+      tableauScore.push(parcoursTrou);
     }
-    parcours1.parcoursTrou = tableauScore
-    return parcours1
+    parcours1.parcoursTrou = tableauScore;
+    return parcours1;
   }
-
 
   for (var i = 0; i < 11; i++) {
     var randomBool1 = Math.random() > 0.5 ? true : false;
@@ -162,30 +154,12 @@ router.post("/golfAdd", async function (req, res, next) {
       golfAddress: {
         golfCity: "Paris",
         golfPostCode: "75017",
-<<<<<<< HEAD
-<<<<<<< HEAD
         golfAddressName: `5${i} boulevard Peirrere`,
         golfLatitude: parseFloat(48.875 + i / 10),
         golfLongitude: parseFloat(2.33 + i / 10),
       },
 
       parcours: [randomGolf(0, 9), randomGolf(1, 18)],
-=======
-        golfAddressName: `5${i} boulevard Pereire`,
-        golfLatitude: parseFloat(48.875 +  i/10 ),
-        golfLongitude: parseFloat(2.33 +  i/10 ),
-      },
-
-      parcours: [randomGolf(0,9),randomGolf(1,18)]
->>>>>>> 97b82ce0f6797be8877a12f84dcb68e066dda47b
-=======
-        golfAddressName: `5${i} boulevard Peirrere`,
-        golfLatitude: parseFloat(48.875 + i / 10),
-        golfLongitude: parseFloat(2.33 + i / 10),
-      },
-
-      parcours: [randomGolf(0, 9), randomGolf(1, 18)],
->>>>>>> 7c6aa683c158e90fd35148f71c8ab15726a0db67
     });
 
     var newGolf = new GolfModel({
@@ -226,26 +200,26 @@ router.post("/register", async function (req, res, next) {
     error.push("Des champs sont vides");
   }
 
-  // var regexMail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
+  var regexMail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
 
-  // if (!regexMail.test(req.body.emailFromFront)) {
-  //   error.push("Email Incorrect");
-  // }
+  if (!regexMail.test(req.body.emailFromFront)) {
+    error.push("Email Incorrect");
+  }
 
-  // var regexPassword = /^(?=.{8,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*$/;
+  var regexPassword = /^(?=.{8,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*$/;
 
-  // if (!regexPassword.test(req.body.passwordFromFront)) {
-  //   error.push(
-  //     "Mot de Passe Incorrect doit contenir au moins 8 charactères, 1 majuscule, 1 minuscule et 1 chiffre"
-  //   );
-  // }
-  // var regexBirthDate = /^[0-3]?[0-9].[0-3]?[0-9].(?:[0-9]{2})?[0-9]{2}$/;
-  // if (
-  //   !regexBirthDate.test(req.body.birthDateFromFront) &&
-  //   req.body.birthDateFromFront.length < 10
-  // ) {
-  //   error.push("Date de naissance incorrect");
-  // }
+  if (!regexPassword.test(req.body.passwordFromFront)) {
+    error.push(
+      "Mot de Passe Incorrect doit contenir au moins 8 charactères, 1 majuscule, 1 minuscule et 1 chiffre"
+    );
+  }
+  var regexBirthDate = /^[0-3]?[0-9].[0-3]?[0-9].(?:[0-9]{2})?[0-9]{2}$/;
+  if (
+    !regexBirthDate.test(req.body.birthDateFromFront) &&
+    req.body.birthDateFromFront.length < 10
+  ) {
+    error.push("Date de naissance incorrect");
+  }
 
   if (error.length == 0) {
     var hash = bcrypt.hashSync(req.body.passwordFromFront, 10);
@@ -300,22 +274,6 @@ router.post("/login", async function (req, res, next) {
   res.json({ result, error, user, token });
 });
 
-router.get("/getReservation/:tokenFromFront", async function (req, res, next) {
-  var reservationTableau = await userModel.findOne({token : req.params.tokenFromFront}).populate({
-    path : 'reservationId',
-    populate : {
-      path : 'idJoueur'
-    }, 
-    populate : {
-      path : 'golfId'
-    }, 
-  })
-  console.log(reservationTableau.reservationId)
-  res.json({ reservation : reservationTableau.reservationId });
-});
-
-
-//Récupération des clés étrangères
 router.post("/saveScore", async function (req, res, next) {
   res.json({ result });
 });
