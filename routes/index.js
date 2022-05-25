@@ -110,25 +110,45 @@ router.post("/golfAdd", async function (req, res, next) {
 
 
   for (var i = 0; i < 11; i++) {
+    var randomBool1 = Math.random() > 0.5 ? true : false;
+    var randomBool2 = Math.random() > 0.5 ? true : false;
+
     golf.push({
       golfName: `golf ${i}`,
+      practice: randomBool1,
+      restauration: randomBool2,
+      dixhuitTrous: 1,
+      neufTrous: 1,
       golfAddress: {
         golfCity: "Paris",
         golfPostCode: "75017",
+<<<<<<< HEAD
         golfAddressName: `5${i} boulevard Peirrere`,
         golfLatitude: parseFloat(48.875 + i / 10),
         golfLongitude: parseFloat(2.33 + i / 10),
       },
 
       parcours: [randomGolf(0, 9), randomGolf(1, 18)],
+=======
+        golfAddressName: `5${i} boulevard Pereire`,
+        golfLatitude: parseFloat(48.875 +  i/10 ),
+        golfLongitude: parseFloat(2.33 +  i/10 ),
+      },
+
+      parcours: [randomGolf(0,9),randomGolf(1,18)]
+>>>>>>> 97b82ce0f6797be8877a12f84dcb68e066dda47b
     });
 
     var newGolf = new GolfModel({
       golfName: golf[i].golfName,
+      practice: golf[i].practice,
+      restauration: golf[i].restauration,
+      dixhuitTrous: golf[i].dixhuitTrous,
+      neufTrous: golf[i].neufTrous,
       golfCity: golf[i].golfCity,
       golfAddress: golf[i].golfAddress,
       golfPostCode: golf[i].golfPostCode,
-      parcours: golf[i].parcours,
+      parcours: golf[i].parcours
     });
     var golfSaved = await newGolf.save();
   }
