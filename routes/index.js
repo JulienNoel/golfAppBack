@@ -84,23 +84,24 @@ router.post("/golfAdd", async function (req, res, next) {
     379, 169, 360,
   ];
   var tableauImage = [
-    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399533/golf/vineuil-8-sm_j4seyc.jpg",
-    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399527/golf/vineuil-7-sm_z4fsly.jpg",
-    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399530/golf/vineuil-6-sm_pxw000.jpg",
-    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399524/golf/vineuil-5-sm_lchlaz.jpg",
-    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399521/golf/vineuil-4-sm_gfymyg.jpg",
-    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399518/golf/vineuil-3-sm_oghwtx.jpg",
-    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399515/golf/vineuil-2-sm_wr4gxs.jpg",
-    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399512/golf/vineuil-18-sm.jpg",
-    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399506/golf/vineuil-17-sm.jpg",
-    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399503/golf/vineuil-16-sm.jpg",
-    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399500/golf/vineuil-15-sm_tjen44.jpg",
-    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399497/golf/vineuil-14-sm_xm0ait.jpg",
-    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399494/golf/vineuil-13-sm_cnd9z5.jpg",
-    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399542/golf/vineuil-11-sm_fqpopc.jpg",
-    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399491/golf/vineuil-12-sm_v81obm.jpg",
-    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399539/golf/vineuil-10-sm_yxg9zv.jpg",
     "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399509/golf/vineuil-1-sm_x7dn5o.jpg",
+    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653551887/golf/vineuil-2-sm_wr4gxs.jpg",
+    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653551864/golf/vineuil-3-sm_oghwtx.jpg",
+    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653551843/golf/vineuil-4-sm_gfymyg.jpg",
+    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653399524/golf/vineuil-5-sm_lchlaz.jpg",
+    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653551766/golf/vineuil-6-sm_pxw000.jpg",
+    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653551789/golf/vineuil-7-sm_z4fsly.jpg",
+    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653551744/golf/vineuil-8-sm_j4seyc.jpg",
+    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653551723/golf/vineuil-9-sm_eniu6e.jpg",
+    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653551694/golf/vineuil-10-sm_yxg9zv.jpg",
+    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653552626/golf/vineuil-11-sm_fqpopc.jpg",
+    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653552040/golf/vineuil-12-sm_v81obm.jpg",
+    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653552023/golf/vineuil-13-sm_cnd9z5.jpg",
+    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653552008/golf/vineuil-14-sm_xm0ait.jpg",
+    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653551989/golf/vineuil-15-sm_tjen44.jpg",
+    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653551971/golf/vineuil-16-sm.jpg",
+    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653551938/golf/vineuil-17-sm.jpg",
+    "https://res.cloudinary.com/dqvhyz0rs/image/upload/v1653551915/golf/vineuil-18-sm.jpg",
   ];
   var nomParcours = [
     "Parcours belle vue",
@@ -296,9 +297,72 @@ router.post("/register", async function (req, res, next) {
       result = true;
     }
   }
+})
 
-  res.json({ result, error, user });
-});
+// router.post("/register", async function (req, res, next) {
+//   var result = false;
+//   var user = null;
+//   var error = [];
+
+//   const data = await userModel.findOne({
+//     mail: req.body.emailFromFront,
+//   });
+
+//   if (data != null) {
+//     error.push("utilisateur déjà présent");
+//   }
+
+//   if (
+//     req.body.passwordFromFront == "" ||
+//     req.body.userNameFromFront == "" ||
+//     req.body.prenomFromFront == "" ||
+//     req.body.birthDateFromFront == ""
+//   ) {
+//     error.push("Des champs sont vides");
+//   }
+
+//   // var regexMail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
+
+//   // if (!regexMail.test(req.body.emailFromFront)) {
+//   //   error.push("Email Incorrect");
+//   // }
+
+//   // var regexPassword = /^(?=.{8,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*$/;
+
+//   // if (!regexPassword.test(req.body.passwordFromFront)) {
+//   //   error.push(
+//   //     "Mot de Passe Incorrect doit contenir au moins 8 charactères, 1 majuscule, 1 minuscule et 1 chiffre"
+//   //   );
+//   // }
+//   // var regexBirthDate = /^[0-3]?[0-9].[0-3]?[0-9].(?:[0-9]{2})?[0-9]{2}$/;
+//   // if (
+//   //   !regexBirthDate.test(req.body.birthDateFromFront) &&
+//   //   req.body.birthDateFromFront.length < 10
+//   // ) {
+//   //   error.push("Date de naissance incorrect");
+//   // }
+
+//   if (error.length == 0) {
+//     var hash = bcrypt.hashSync(req.body.passwordFromFront, 10);
+
+//     var newUser = new userModel({
+//       mail: req.body.emailFromFront,
+//       password: hash,
+//       token: uid2(32),
+//       userName: req.body.userNameFromFront,
+//       userPrenom: req.body.prenomFromFront,
+//       birthDate: req.body.birthDateFromFront,
+//     });
+
+//     var user = await newUser.save();
+
+//     if (user) {
+//       result = true;
+//     }
+//   }
+
+//   res.json({ result, error, user });
+// });
 
 router.post("/login", async function (req, res, next) {
   var result = false;
