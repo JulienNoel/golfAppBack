@@ -142,7 +142,7 @@ router.post("/golfAdd", async function (req, res, next) {
     "Parcours des plaines de sable",
     "Parcours du chancelier",
     "Parcours de mon coeur",
-    "Parcours des rencontres"
+    "Parcours des rencontres",
   ];
 
   var nomGolf = [
@@ -165,8 +165,8 @@ router.post("/golfAdd", async function (req, res, next) {
     "Golf des Terres anciennes",
     "Golf de la frisouille",
     "Golf des bébés nageurs",
-    "Golf de la grenouille baveuse"
-  ]
+    "Golf de la grenouille baveuse",
+  ];
 
   function randomGolf(index, longueurTrou) {
     var tableauScore = [];
@@ -188,10 +188,19 @@ router.post("/golfAdd", async function (req, res, next) {
     var randomBool1 = Math.random() > 0.5 ? true : false;
     var randomBool2 = Math.random() > 0.5 ? true : false;
     var randomCity = Math.random() > 0.5 ? "Paris" : "Amiens";
-    var randomPostCode = randomCity == "Paris" ? "75000" : "80000"
-    var randomLatitude = randomCity == "Paris" ? parseFloat(48.875 + ((Math.random() - 0.5) * 2) / 2) : parseFloat(49.9 + ((Math.random() - 0.5) * 2) / 2)
-    var randomLongitude = randomCity == "Paris" ? parseFloat(2.33 + ((Math.random() - 0.5) * 2) / 2) : parseFloat(2.3 + ((Math.random() - 0.5) * 2) / 2)
-    var randomAddressName = randomCity == "Paris" ? `5${i} boulevard Pereire` : `5${i} boulevard de la molle fesse`
+    var randomPostCode = randomCity == "Paris" ? "75000" : "80000";
+    var randomLatitude =
+      randomCity == "Paris"
+        ? parseFloat(48.875 + ((Math.random() - 0.5) * 2) / 2)
+        : parseFloat(49.9 + ((Math.random() - 0.5) * 2) / 2);
+    var randomLongitude =
+      randomCity == "Paris"
+        ? parseFloat(2.33 + ((Math.random() - 0.5) * 2) / 2)
+        : parseFloat(2.3 + ((Math.random() - 0.5) * 2) / 2);
+    var randomAddressName =
+      randomCity == "Paris"
+        ? `5${i} boulevard Pereire`
+        : `5${i} boulevard de la molle fesse`;
 
     golf.push({
       golfName: nomGolf[i],
@@ -204,7 +213,7 @@ router.post("/golfAdd", async function (req, res, next) {
         golfPostCode: randomPostCode,
         golfAddressName: randomAddressName,
         golfLatitude: randomLatitude,
-        golfLongitude: randomLongitude
+        golfLongitude: randomLongitude,
       },
 
       parcours: [randomGolf(i, 9), randomGolf(nomParcours.length - 1 - i, 18)],
@@ -383,6 +392,21 @@ router.post("/login", async function (req, res, next) {
   }
 
   res.json({ result, error, user, token });
+});
+
+router.get("/getReservation/:tokenFromFront", async function (req, res, next) {
+  var reservationTableau = await userModel
+    .findOne({ token: req.params.tokenFromFront })
+    .populate({
+      path: "reservationId",
+      populate: {
+        path: "idJoueur",
+      },
+      populate: {
+        path: "golfId",
+      },
+    });
+  res.json({ reservation: reservationTableau.reservationId });
 });
 
 router.post("/saveScore", async function (req, res, next) {
