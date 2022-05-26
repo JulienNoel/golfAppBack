@@ -274,8 +274,6 @@ router.post("/login", async function (req, res, next) {
   res.json({ result, error, user, token });
 });
 
-router.post("/saveScore", async function (req, res, next) {
-  res.json({ result });
-});
+
 
 module.exports = router;
