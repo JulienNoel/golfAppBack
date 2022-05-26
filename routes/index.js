@@ -109,21 +109,64 @@ router.post("/golfAdd", async function (req, res, next) {
     "Parcours beau soleil",
     "Parcours des amoureux",
     "Parcours d'Alexis 1er",
-    "Parcours Shaddy",
+    "Parcours Shady",
     "Parcours de Paris",
     "Parcours de la bonne fortune",
     "Parcours du ruisseau",
     "Parcours de la cascade",
     "Parcours des rosseaux",
     "Parcours de la tranquilité",
-    "Parcours des hérables",
+    "Parcours des trèfles à quatre feuilles",
     "Parcours du débutant",
     "Parcours Wood",
     "Parcours de la vallée",
-    "Parcours de la dune Bleu",
+    "Parcours de la dune bleue",
     "Parcours de la Capsule",
-    "Parcours hole in one",
+    "Parcours des grands Ducs",
+    "Parcours Edouard le Grand",
+    "Parcours de la famille Robinson",
+    "Parcours Anakin Skywalker",
+    "Parcours Roch Voisine",
+    "Parcours divin",
+    "Parcours des nains de jardin",
+    "Parcours du gentleman voyageur",
+    "Parcours Arsène Lupin",
+    "Parcours Mr Bean",
+    "Parcours Kirikou",
+    "Parcours Volcano",
+    "Parcours des frères jumeaux",
+    "Parcours des ateliers verdoyants",
+    "Parcours bouclier rouge",
+    "Parcours des Celtes",
+    "Parcours Robin des Bois",
+    "Parcours des plaines de sable",
+    "Parcours du chancelier",
+    "Parcours de mon coeur",
+    "Parcours des rencontres"
   ];
+
+  var nomGolf = [
+    "Golf de la vallée",
+    "Golf de la fourmi rouge",
+    "Golf mon beau soleil",
+    "Golf des habitués",
+    "Golf de la plaine",
+    "Golf d'Edouard le Grand",
+    "Golf de la musique douce",
+    "Golf de la chance",
+    "Golf du point de non-retour",
+    "Golf nocturne",
+    "Master golf",
+    "Golf papier ciseaux",
+    "Golf des corneilles à trois yeux",
+    "Golf des beaux paysages",
+    "Golf de la grande motte",
+    "Golf Chaumont",
+    "Golf des Terres anciennes",
+    "Golf de la frisouille",
+    "Golf des bébés nageurs",
+    "Golf de la grenouille baveuse"
+  ]
 
   function randomGolf(index, longueurTrou) {
     var tableauScore = [];
@@ -141,25 +184,30 @@ router.post("/golfAdd", async function (req, res, next) {
     return parcours1;
   }
 
-  for (var i = 0; i < 11; i++) {
+  for (var i = 0; i < 20; i++) {
     var randomBool1 = Math.random() > 0.5 ? true : false;
     var randomBool2 = Math.random() > 0.5 ? true : false;
+    var randomCity = Math.random() > 0.5 ? "Paris" : "Amiens";
+    var randomPostCode = randomCity == "Paris" ? "75000" : "80000"
+    var randomLatitude = randomCity == "Paris" ? parseFloat(48.875 + ((Math.random() - 0.5) * 2)/2) : parseFloat(49.9 + ((Math.random() - 0.5) * 2)/2)
+    var randomLongitude = randomCity == "Paris" ? parseFloat(2.33 + ((Math.random() - 0.5) * 2)/2) : parseFloat(2.3+ ((Math.random() - 0.5) * 2)/2)
+    var randomAddressName = randomCity == "Paris" ? `5${i} boulevard Pereire` : `5${i} boulevard de la molle fesse`
 
     golf.push({
-      golfName: `golf ${i}`,
+      golfName: nomGolf[i],
       practice: randomBool1,
       restauration: randomBool2,
       dixhuitTrous: 1,
       neufTrous: 1,
       golfAddress: {
-        golfCity: "Paris",
-        golfPostCode: "75017",
-        golfAddressName: `5${i} boulevard Peirrere`,
-        golfLatitude: parseFloat(48.875 + i / 10),
-        golfLongitude: parseFloat(2.33 + i / 10),
+        golfCity: randomCity,
+        golfPostCode: randomPostCode,
+        golfAddressName: randomAddressName,
+        golfLatitude: randomLatitude,
+        golfLongitude: randomLongitude
       },
 
-      parcours: [randomGolf(0, 9), randomGolf(1, 18)],
+      parcours: [randomGolf(i, 9), randomGolf(nomParcours.length - 1 - i, 18)],
     });
 
     var newGolf = new GolfModel({
