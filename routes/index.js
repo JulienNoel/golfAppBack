@@ -331,7 +331,6 @@ router.post("/login", async function (req, res, next) {
   res.json({ result, error, user, token });
 });
 
-<<<<<<< HEAD
 router.get("/getReservation/:tokenFromFront", async function (req, res, next) {
   var reservationTableau = await userModel
     .findOne({ token: req.params.tokenFromFront })
@@ -344,15 +343,11 @@ router.get("/getReservation/:tokenFromFront", async function (req, res, next) {
         path: "golfId",
       },
     });
-  console.log(reservationTableau.reservationId);
   res.json({ reservation: reservationTableau.reservationId });
 });
 
 router.post("/saveScore", async function (req, res, next) {
   res.json({ result });
 });
-=======
-
->>>>>>> 6a031df423620a7f3541742334672f058923188f
 
 module.exports = router;
