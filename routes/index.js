@@ -331,5 +331,21 @@ router.post("/login", async function (req, res, next) {
   res.json({ result, error, user, token });
 });
 
+router.get("/getReservation/:tokenFromFront", async function (req, res, next) {
+  var reservationTableau = await userModel
+    .findOne({ token: req.params.tokenFromFront })
+    .populate({
+      path: "reservationId",
+      populate: {
+        path: "idJoueur",
+      },
+      populate: {
+        path: "golfId",
+      },
+    });
+  res.json({ reservation: reservationTableau.reservationId });
+});
+
+
 
 module.exports = router;
