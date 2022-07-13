@@ -27,27 +27,6 @@ router.get("/getUserByToken/:tokenFromFront", async function (req, res) {
   res.json({ user, error });
 });
 
-router.put("/userReservation/:idFromFront", async function (req, res) {
-  var error = "";
-  var idReservation = req.body.idReservationFromFront;
-
-  console.log("idreservation", idReservation);
-
-  if (!req.params.idFromFront) {
-    error = "Pas de IdFromfront";
-  }
-
-  var user = await userModel.findOne({ _id: req.params.idFromFront });
-
-  if (!user) {
-    error = "User n'existe pas dans la bdd";
-  }
-
-  var reservation = user.reservationId;
-  reservation.push(idReservation);
-  var savedUser = await user.save();
-  res.json({ savedUser, error });
-});
 
 router.post("/reservation", async function (req, res, next) {
   var playerIdArray = [];
@@ -73,6 +52,140 @@ router.post("/reservation", async function (req, res, next) {
 router.get("/askgolf", async function (req, res, next) {
   var result = await GolfModel.find();
   res.json({ result });
+});
+
+
+
+router.post("/register", async function (req, res, next) {
+  var result = false;
+  var user = null;
+  var error = [];
+
+  const data = await userModel.findOne({
+    mail: req.body.emailFromFront,
+  });
+
+  if (data != null) {
+    error.push("utilisateur déjà présent");
+  }
+
+  if (
+    req.body.passwordFromFront == "" ||
+    req.body.userNameFromFront == "" ||
+    req.body.prenomFromFront == "" ||
+    req.body.birthDateFromFront == ""
+  ) {
+    error.push("Des champs sont vides");
+  }
+
+  var regexMail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
+
+  if (!regexMail.test(req.body.emailFromFront)) {
+    error.push("Email Incorrect");
+  }
+
+  var regexPassword = /^(?=.{8,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*$/;
+
+  if (!regexPassword.test(req.body.passwordFromFront)) {
+    error.push(
+      "Mot de Passe Incorrect doit contenir au moins 8 charactères, 1 majuscule, 1 minuscule et 1 chiffre"
+    );
+  }
+  var regexBirthDate = /^[0-3]?[0-9].[0-3]?[0-9].(?:[0-9]{2})?[0-9]{2}$/;
+  if (
+    !regexBirthDate.test(req.body.birthDateFromFront) &&
+    req.body.birthDateFromFront.length < 10
+  ) {
+    error.push("Date de naissance incorrect");
+  }
+
+  if (error.length == 0) {
+    var hash = bcrypt.hashSync(req.body.passwordFromFront, 10);
+
+    var newUser = new userModel({
+      mail: req.body.emailFromFront,
+      password: hash,
+      token: uid2(32),
+      userName: req.body.userNameFromFront,
+      userPrenom: req.body.prenomFromFront,
+      birthDate: req.body.birthDateFromFront,
+    });
+
+    var user = await newUser.save();
+
+    if (user) {
+      result = true;
+    }
+  }
+  res.json({ result, error, user });
+})
+
+
+router.post("/login", async function (req, res, next) {
+  var result = false;
+  var user = null;
+  var error = [];
+  var token = null;
+
+  if (req.body.emailFromFront == "" || req.body.passwordFromFront == "") {
+    error.push("champs vides");
+  }
+
+  if (error.length == 0) {
+    user = await userModel.findOne({
+      mail: req.body.emailFromFront,
+    });
+
+    if (user) {
+      if (bcrypt.compareSync(req.body.passwordFromFront, user.password)) {
+        result = true;
+        token = user.token;
+      } else {
+        result = false;
+        error.push("mot de passe incorrect");
+      }
+    } else {
+      error.push("email incorrect");
+    }
+  }
+
+  res.json({ result, error, user, token });
+});
+
+router.get("/getReservation/:tokenFromFront", async function (req, res, next) {
+  var reservationTableau = await userModel
+    .findOne({ token: req.params.tokenFromFront })
+    .populate({
+      path: "reservationId",
+      populate: {
+        path: "idJoueur",
+      },
+      populate: {
+        path: "golfId",
+      },
+    });
+  res.json({ reservation: reservationTableau.reservationId });
+});
+
+router.put("/userReservation/:idFromFront", async function (req, res) {
+  var error = "";
+  var idReservation = req.body.idReservationFromFront;
+
+  if (!req.params.idFromFront) {
+    error = "Pas de IdFromfront";
+  }
+
+  var user = await userModel.findOne({ _id: req.params.idFromFront });
+
+  if (!user) {
+    error = "User n'existe pas dans la bdd";
+  }
+
+  var reservation = user.reservationId;
+  reservation.push(idReservation);
+  
+  var savedUser = await user.save();
+  res.json({ savedUser, error });
 });
 
 //Route pour créer notre Collection Golf
@@ -235,181 +348,4 @@ router.post("/golfAdd", async function (req, res, next) {
   }
   res.json(golfSaved);
 });
-
-router.post("/register", async function (req, res, next) {
-  var result = false;
-  var user = null;
-  var error = [];
-
-  const data = await userModel.findOne({
-    mail: req.body.emailFromFront,
-  });
-
-  if (data != null) {
-    error.push("utilisateur déjà présent");
-  }
-
-  if (
-    req.body.passwordFromFront == "" ||
-    req.body.userNameFromFront == "" ||
-    req.body.prenomFromFront == "" ||
-    req.body.birthDateFromFront == ""
-  ) {
-    error.push("Des champs sont vides");
-  }
-
-  var regexMail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
-
-  if (!regexMail.test(req.body.emailFromFront)) {
-    error.push("Email Incorrect");
-  }
-
-  var regexPassword = /^(?=.{8,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*$/;
-
-  if (!regexPassword.test(req.body.passwordFromFront)) {
-    error.push(
-      "Mot de Passe Incorrect doit contenir au moins 8 charactères, 1 majuscule, 1 minuscule et 1 chiffre"
-    );
-  }
-  var regexBirthDate = /^[0-3]?[0-9].[0-3]?[0-9].(?:[0-9]{2})?[0-9]{2}$/;
-  if (
-    !regexBirthDate.test(req.body.birthDateFromFront) &&
-    req.body.birthDateFromFront.length < 10
-  ) {
-    error.push("Date de naissance incorrect");
-  }
-
-  if (error.length == 0) {
-    var hash = bcrypt.hashSync(req.body.passwordFromFront, 10);
-
-    var newUser = new userModel({
-      mail: req.body.emailFromFront,
-      password: hash,
-      token: uid2(32),
-      userName: req.body.userNameFromFront,
-      userPrenom: req.body.prenomFromFront,
-      birthDate: req.body.birthDateFromFront,
-    });
-
-    var user = await newUser.save();
-
-    if (user) {
-      result = true;
-    }
-  }
-})
-
-// router.post("/register", async function (req, res, next) {
-//   var result = false;
-//   var user = null;
-//   var error = [];
-
-//   const data = await userModel.findOne({
-//     mail: req.body.emailFromFront,
-//   });
-
-//   if (data != null) {
-//     error.push("utilisateur déjà présent");
-//   }
-
-//   if (
-//     req.body.passwordFromFront == "" ||
-//     req.body.userNameFromFront == "" ||
-//     req.body.prenomFromFront == "" ||
-//     req.body.birthDateFromFront == ""
-//   ) {
-//     error.push("Des champs sont vides");
-//   }
-
-//   // var regexMail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
-
-//   // if (!regexMail.test(req.body.emailFromFront)) {
-//   //   error.push("Email Incorrect");
-//   // }
-
-//   // var regexPassword = /^(?=.{8,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*$/;
-
-//   // if (!regexPassword.test(req.body.passwordFromFront)) {
-//   //   error.push(
-//   //     "Mot de Passe Incorrect doit contenir au moins 8 charactères, 1 majuscule, 1 minuscule et 1 chiffre"
-//   //   );
-//   // }
-//   // var regexBirthDate = /^[0-3]?[0-9].[0-3]?[0-9].(?:[0-9]{2})?[0-9]{2}$/;
-//   // if (
-//   //   !regexBirthDate.test(req.body.birthDateFromFront) &&
-//   //   req.body.birthDateFromFront.length < 10
-//   // ) {
-//   //   error.push("Date de naissance incorrect");
-//   // }
-
-//   if (error.length == 0) {
-//     var hash = bcrypt.hashSync(req.body.passwordFromFront, 10);
-
-//     var newUser = new userModel({
-//       mail: req.body.emailFromFront,
-//       password: hash,
-//       token: uid2(32),
-//       userName: req.body.userNameFromFront,
-//       userPrenom: req.body.prenomFromFront,
-//       birthDate: req.body.birthDateFromFront,
-//     });
-
-//     var user = await newUser.save();
-
-//     if (user) {
-//       result = true;
-//     }
-//   }
-
-//   res.json({ result, error, user });
-// });
-
-router.post("/login", async function (req, res, next) {
-  var result = false;
-  var user = null;
-  var error = [];
-  var token = null;
-
-  if (req.body.emailFromFront == "" || req.body.passwordFromFront == "") {
-    error.push("champs vides");
-  }
-
-  if (error.length == 0) {
-    user = await userModel.findOne({
-      mail: req.body.emailFromFront,
-    });
-
-    if (user) {
-      if (bcrypt.compareSync(req.body.passwordFromFront, user.password)) {
-        result = true;
-        token = user.token;
-      } else {
-        result = false;
-        error.push("mot de passe incorrect");
-      }
-    } else {
-      error.push("email incorrect");
-    }
-  }
-
-  res.json({ result, error, user, token });
-});
-
-router.get("/getReservation/:tokenFromFront", async function (req, res, next) {
-  var reservationTableau = await userModel
-    .findOne({ token: req.params.tokenFromFront })
-    .populate({
-      path: "reservationId",
-      populate: {
-        path: "idJoueur",
-      },
-      populate: {
-        path: "golfId",
-      },
-    });
-  res.json({ reservation: reservationTableau.reservationId });
-});
-
-
-
 module.exports = router;
